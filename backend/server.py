@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from bottle import request, route, template, run, static_file
-
+from psutil import users, cpu_percent
 # static files js/css/etc
 @route('/static/<filepath:path>')
 def static_files(filepath):

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="./static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/bootstrap-theme.min.css">
 </head>
 <body>
     <!-- Header -->
@@ -41,7 +41,7 @@
                 <div id="graph-hddstats"></div>
             </div>
             <div class="col-xs-4">
-                <h3><b>Network Status</b></h3>                
+                <h3><b>Network Status</b></h3>
                 <p><b>Avg. Data Transfer:</b> 200 kbps</p>
                 <p><b>Curr. Upload Rate:</b> 100 kbps</p>
                 <p><b>Curr. Download Rate:</b> 50 kbps</p>
@@ -74,8 +74,9 @@
     </nav>
 
 
-    <script src="./js/jquery-3.2.1.min.js"></script>
-    <script src="./js/plotly-latest.min.js"></script>
+    <script src="./static/js/jquery-3.2.1.min.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script>
+    <script src="./static/js/plotly-latest.min.js"></script>
     <script type="text/javascript">
 
         function getData( scale=100)
@@ -183,7 +184,7 @@
         /*function updateGraphCPU()
         {
             let data = getData(100);
-            
+
             // update cpu graph randomly with data
             Plotly.newPlot('graph-cpustats', data, cpu_layout);
         }*/

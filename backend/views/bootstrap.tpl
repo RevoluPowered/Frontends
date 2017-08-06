@@ -25,7 +25,16 @@
         <div class="row">
             <div class="col-xs-4 col-xs-offset-2">
                 <h3><b>CPU Load</b></h3>
-                <p>Some text</p>
+                 <%
+                    from psutil import users, cpu_percent, cpu_count
+                    count = 1
+                    corecount = cpu_count(logical=True)
+                 %>
+                 <b>Core count: </b>{{corecount}}<hr>
+                 % for cpu in cpu_percent(interval=1, percpu=True):
+                  <b>core {{count}}:</b> {{cpu}} %<br>
+                 % count = count + 1
+                 % end
                 <div id="graph-cpustats"></div>
             </div>
             <div class="col-xs-4">
