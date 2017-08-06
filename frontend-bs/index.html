@@ -9,70 +9,64 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                Gordo.Net
-            </a>
+                <a class="navbar-brand" href="#">Gordo.Net</a>
             </div>
-
         </div>
     </nav>
 
-    <!-- Current path information -->
+    <!-- Content -->
+    <div class="container-fluid">
+          <!-- Current path information -->
     <ol class="breadcrumb">
         <li><a href="#">Home</a></li>
         <li><a href="#">Library</a></li>
         <li class="active">Data</li>
     </ol>
 
-    <!-- Content -->
-    <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4">
-                <h3>Some script</h3>
+                <h3><b>CPU load</b></h3>
                 <p>Some text</p>
-                <button class="btn btn-info">Button</button>
-                <button class="btn btn-warning">Button</button>
-                <button class="btn btn-danger">Button</button>
-                <button class="btn btn-warning">Button</button>
+                <div id="graph-netstats"></div>
             </div>
             <div class="col-xs-4">
-                <h3>Some script</h3>
+                <h3><b>Memory Usage</b></h3>
                 <p>Some text</p>
                 <button class="btn btn-info">Button</button>
                 <button class="btn btn-warning">Button</button>
                 <button class="btn btn-danger">Button</button>
-                <button class="btn btn-warning">Button</button>
+                <button class="btn btn-success">Button</button>
             </div>
             <div class="col-xs-4">
-                <h3>Some script</h3>
+                <h3><b>HDD Status</b></h3>
                 <p>Some text</p>
                 <button class="btn btn-info">Button</button>
                 <button class="btn btn-warning">Button</button>
                 <button class="btn btn-danger">Button</button>
-                <button class="btn btn-warning">Button</button>
+                <button class="btn btn-success">Button</button>
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col-xs-4">
-                <h3>Some script</h3>
-                <div class="well">Another console</div>
-            </div>
-            <div class="col-xs-4">
-                <h3>Some script</h3>
-                <p>Some text</p>
+                <h3><b>Network Status</b></h3>
+                <p><b>Avg. Data Transfer:</b> 200 kbps</p>
+                <p><b>Curr. Upload Rate:</b> 100 kbps</p>
+                <p><b>Curr. Download Rate:</b> 50 kbps</p>
                 <button class="btn btn-info">Button</button>
                 <button class="btn btn-warning">Button</button>
                 <button class="btn btn-danger">Button</button>
-                <button class="btn btn-warning">Button</button>
+                <button class="btn btn-success">Button</button>
             </div>
             <div class="col-xs-4">
-                <h3>Some script</h3>
-                <p>Some text</p>
-                <button class="btn btn-info">Button</button>
-                <button class="btn btn-warning">Button</button>
-                <button class="btn btn-danger">Button</button>
-                <button class="btn btn-warning">Button</button>
+                 <h3><b>Temperature Status</b></h3>
+                <p><b>Avg. Temp:</b> 30.00 <b>*C</b></p>
+                 <div id="graph-tempstats"></div>
+            </div>
+            <div class="col-xs-4">
+                 <h3><b>Connectivity Status</b></h3>
+                <p><b>Latency:</b> 80ms</p>
+                <p><b>Uplink speed:</b> 10/1000 mbit</p>
             </div>
         </div>
     </div>
@@ -88,6 +82,54 @@
         </div>
     </nav>
 
+
     <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+
+        function getData()
+        {
+            // testing graph
+            var data = [
+                {
+                    x: [1,2,3,4,5,6],
+                    y: [Math.random(),Math.random(),Math.random(),Math.random(),Math.random()],
+                    type: 'scatter'
+                }
+            ];
+
+            return data;
+        }
+
+
+        var net_traffic_layout = {
+            autosize: true,
+            title: 'Network Traffic',
+            xaxis: {
+                title: 'Time',
+                zeroline: false
+            },
+            yaxis: {
+                title: 'Net traffic',
+                showline: false
+            }
+        };
+
+        var temp_stats_layout = {
+            autosize: true,
+            title: 'Temperature Stats',
+            xaxis: {
+                title: 'Time',
+                zeroline: false
+            },
+            yaxis: {
+                title: 'Temperature *C',
+                showline: false
+            }
+        }
+
+        Plotly.newPlot('graph-netstats', getData(), net_traffic_layout);
+        Plotly.newPlot('graph-tempstats', getData(), temp_stats_layout);
+    </script>
 </body>
 </html>
