@@ -4,9 +4,9 @@
     <link rel="stylesheet" href="./static/css/bootstrap.min.css">
     <link rel="stylesheet" href="./static/css/bootstrap-theme.min.css">
 </head>
-<body>
+<body style="background-color:black;">
     <!-- Header -->
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Gordo.Net</a>
@@ -15,7 +15,7 @@
     </nav>
 
     <!-- Content -->
-    <div class="container-fluid">
+    <div class="container-fluid" style="color:orange;">
           <!-- Current path information -->
     <ol class="breadcrumb">
         <li><a href="#">Home</a></li>
@@ -32,9 +32,10 @@
                  %>
                  <b>Core count: </b>{{corecount}}<hr>
                  % for cpu in cpu_percent(interval=1, percpu=True):
-                  <b>core {{count}}:</b> {{cpu}} %<br>
+                  <b>[{{count}}]</b> {{cpu}}%
                  % count = count + 1
                  % end
+                <br />
                 <div id="graph-cpustats"></div>
             </div>
             <div class="col-xs-4">
