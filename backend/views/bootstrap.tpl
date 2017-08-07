@@ -4,23 +4,23 @@
     <link rel="stylesheet" href="./static/css/bootstrap.min.css">
     <link rel="stylesheet" href="./static/css/bootstrap-theme.min.css">
 </head>
-<body style="background-color:black;">
+<body>
     <!-- Header -->
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Gordo.Net</a>
+                <p class="navbar-text">Authored by Gordon MacPherson</p>
             </div>
         </div>
     </nav>
 
     <!-- Content -->
-    <div class="container-fluid" style="color:orange;">
+    <div class="container-fluid">
           <!-- Current path information -->
     <ol class="breadcrumb">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Library</a></li>
-        <li class="active">Data</li>
+        <li><a onclick="disableGraphs();">Text based</a></li>
+        <li><a onclick="enableGraphs();">Graph based</a></li>
     </ol>
         <div class="row">
             <div class="col-xs-4 col-xs-offset-2">
@@ -30,11 +30,13 @@
                     count = 1
                     corecount = cpu_count(logical=True)
                  %>
-                 <b>Core count: </b>{{corecount}}<hr>
+                 <p><b>Core count: </b>{{corecount}}</p>
+                 <p>
                  % for cpu in cpu_percent(interval=1, percpu=True):
-                  <b>[{{count}}]</b> {{cpu}}%
+                 <b>[{{count}}]</b> {{cpu}}%
                  % count = count + 1
                  % end
+                 </p>
                 <br />
                 <div id="graph-cpustats"></div>
             </div>
@@ -73,14 +75,10 @@
     </div>
 
     <!-- Footer -->
-    <nav class="navbar navbar-default navbar-fixed-bottom">
-        <div class="container-fluid">
-            <div class="navbar-header">
-            <a class="navbar-brand" href="#">
-                <img alt="Gordo.Net" src="...">
-            </a>
-            </div>
-        </div>
+    <nav class="navbar navbar-inverse navbar-fixed-bottom" style="color:white;">
+      <ul class="nav navbar-nav" style="text-align:center;">
+          <p class="navbar-text">Copyright Gordo.Net &copy; 2017</p>
+      </ul>
     </nav>
 
 
@@ -88,7 +86,6 @@
     <script src="./static/js/bootstrap.min.js"></script>
     <script src="./static/js/plotly-latest.min.js"></script>
     <script type="text/javascript">
-
         function getData( scale=100)
         {
             // testing graph
@@ -247,15 +244,37 @@
 
         }
 
-        var cpu_data = getData(100);
+        function enableGraphs()
+        {
+          //var cpu_data = getData(100);
+
+          //Plotly.newPlot('graph-cpustats', cpu_data, cpu_layout);
+          Plotly.newPlot('graph-memstats', getData(200), mem_layout);
+          Plotly.newPlot('graph-hddstats', getData(100), hdd_layout);
+          Plotly.newPlot('graph-netstatus', getData(1000), net_layout);
+          Plotly.newPlot('graph-tempstats', getData(40), temp_layout);
+          Plotly.newPlot('graph-constats', getData(), con_layout);
+          retrieve_cpudata();
+        }
+
+        function disableGraphs()
+        {
+          Plotly.purge('graph-cpustats');
+          Plotly.purge('graph-hddstats');
+          Plotly.purge('graph-netstatus');
+          Plotly.purge('graph-tempstats');
+          Plotly.purge('graph-memstats');
+          Plotly.purge('graph-constats');
+        }
+        //var cpu_data = getData(100);
 
         //Plotly.newPlot('graph-cpustats', cpu_data, cpu_layout);
-        Plotly.newPlot('graph-memstats', getData(200), mem_layout);
-        Plotly.newPlot('graph-hddstats', getData(100), hdd_layout);
-        Plotly.newPlot('graph-netstatus', getData(1000), net_layout);
-        Plotly.newPlot('graph-tempstats', getData(40), temp_layout);
-        Plotly.newPlot('graph-constats', getData(), con_layout);
-        retrieve_cpudata();
+        //Plotly.newPlot('graph-memstats', getData(200), mem_layout);
+        //Plotly.newPlot('graph-hddstats', getData(100), hdd_layout);
+        //Plotly.newPlot('graph-netstatus', getData(1000), net_layout);
+        //Plotly.newPlot('graph-tempstats', getData(40), temp_layout);
+        //Plotly.newPlot('graph-constats', getData(), con_layout);
+        //retrieve_cpudata();
         /*function updateGraphCPU()
         {
             let data = getData(100);
