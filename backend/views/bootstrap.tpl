@@ -140,7 +140,8 @@
               title: 'CPU Percentage %',
               showline: false
           },
-          showlegend: false
+          showlegend: false,
+          line: {shape: 'spline'}
         }
 
         var hdd_layout = {
