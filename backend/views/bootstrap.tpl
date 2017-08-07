@@ -130,16 +130,17 @@
         }
 
         var cpu_layout = {
-            autosize: true,
-            //title:'Processor Status',
-            xaxis: {
-                title: 'Time',
-                zeroline: false
-            },
-            yaxis: {
-                title: 'Percentage %',
-                showline: false
-            }
+          autosize: true,
+          //title:'HDD usage',
+          xaxis: {
+              title: 'Time',
+              zeroline: false
+          },
+          yaxis: {
+              title: 'CPU Percentage %',
+              showline: false
+          },
+          showlegend: false
         }
 
         var hdd_layout = {
@@ -181,15 +182,78 @@
             }
         }
 
+        function retrieve_cpudata()
+        {
+          Plotly.d3.csv("./static/data/cpu_percentage.csv", function(data){
+            let xval = [];
+
+            for( let i = 0; i<data.length; i++){
+              let row = data[i];
+              xval.push(i)
+            }
+
+            function fuckyoujs()
+            {
+              let key_info = [];
+              for( let i=0;i<data.length;i++)
+              {
+                for(var key in data[i])
+                {
+                  if(!key_info.includes(key))
+                  {
+                    //console.log("Key:" + key);
+                    key_info.push(key);
+                  }
+                  else {
+                    //console.log("fuck you js");
+                    return key_info; // done keys (break is unreliable and doesn't work)
+                  }
+                }
+              }
+            }
+
+            let keys = fuckyoujs();
+
+            let gdata_new = [];
+            for( var key in keys)
+            {
+              gdata_new.push(
+              {
+                name: "core " + key,
+                x: xval,
+                y: [],
+                mode: 'lines',
+                type: 'lines'
+              });
+              //console.log("Added key table: " + key);
+            }
+
+            for( let i = 0; i<data.length; i++){
+              let row = data[i];
+
+              for( let keyID = 0; keyID < keys.length; keyID++)
+              {
+                let keyvalue = row[keys[keyID]];
+                //console.log("key val: " + keyvalue);
+                gdata_new[keyID].y.push(keyvalue);
+              }
+            }
+
+            Plotly.newPlot('graph-cpustats', gdata_new, cpu_layout);
+
+            });
+
+        }
+
         var cpu_data = getData(100);
 
-        Plotly.newPlot('graph-cpustats', cpu_data, cpu_layout);
+        //Plotly.newPlot('graph-cpustats', cpu_data, cpu_layout);
         Plotly.newPlot('graph-memstats', getData(200), mem_layout);
         Plotly.newPlot('graph-hddstats', getData(100), hdd_layout);
         Plotly.newPlot('graph-netstatus', getData(1000), net_layout);
         Plotly.newPlot('graph-tempstats', getData(40), temp_layout);
         Plotly.newPlot('graph-constats', getData(), con_layout);
-
+        retrieve_cpudata();
         /*function updateGraphCPU()
         {
             let data = getData(100);
