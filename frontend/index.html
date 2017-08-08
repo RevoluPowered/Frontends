@@ -39,7 +39,7 @@
                 <br>
                 <br>
             </div>
-            <div class="well col-xs-8 col-md-8 col-md-offset-2 col-xs-offset-2">
+            <div class="col-xs-8 col-md-8 col-md-offset-2 col-xs-offset-2">
                  <div id="graph-weatherstats"></div>              
             </div>
             <div class="col-xs-12 col-md-12 col-md-offset-2 col-xs-offset-2">
@@ -100,6 +100,12 @@
         }
 
         var localstore = localStorage['viewnumber'] || 30;
+        
+        // since it returns an int as a string.
+        if(typeof(localstore) == "string")
+        {
+            localstore = parseInt(localstore);
+        }
         var weatherinfo = getData(100,30);
         var x = localstore;
 
@@ -115,6 +121,9 @@
 
             Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
             x=x+1;
+
+            console.log("Val: " + x);
+            console.log("Mval " + maxvalue);
         }
 
         function prevDate()
@@ -142,7 +151,7 @@
         function updateVisible()
         {
             if(!init) {return};
-            let element = document.getElementById("visible.values")
+            let element = document.getElementById("visible.values");
             maxvalue = element.value;
             maxvalue = clamp(maxvalue, 5,150);
             localStorage['viewnumber'] = maxvalue;
@@ -165,14 +174,15 @@
 
         if(localStorage['viewnumber'])
         {
+            let lsValue = parseInt(localStorage['viewnumber']);
             // init - retrieve elements and set up defaults
-            let element = document.getElementById("visible.values")
-            element.value = localStorage['viewnumber'];
-            maxvalue = localStorage['viewnumber'];
+            let element = document.getElementById("visible.values");
+            element.value = lsValue;
+            maxvalue = lsValue;
+            x = maxvalue;
 
             // reset to default
-            weatherinfo = getData(100,maxvalue);
-            x = maxvalue;
+            weatherinfo = getData(100,maxvalue);            
 
             // plot the graph
             Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
