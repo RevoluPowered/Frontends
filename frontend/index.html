@@ -23,41 +23,27 @@
         <li class="active">Data</li>
     </ol>
         <div class="row">
-            <div class="col-xs-4 col-xs-offset-2">
-                <h3><b>CPU Load</b></h3>
-                <p>Some text</p>
-                <div id="graph-cpustats"></div>
+            <div class="col-xs-8 col-md-8 col-md-offset-2 col-xs-offset-2">
+                <h3><b>Temperature monitor</b>
+                <div class="btn-group pull-right"> 
+                <button class="btn btn-info" onclick="refresh()">refresh</button>
+                <button class="btn btn-danger" onclick="prevDate()">previous</button>
+                <button class="btn btn-danger" onclick="nextDate()">next</button>
+                </div>
+                <br>
+                <br>
+                </h3>
             </div>
-            <div class="col-xs-4">
-                <h3><b>Memory Usage</b></h3>
-                <p>Some text</p>
-                <div id="graph-memstats"></div>
+
+            <div class="col-xs-10 col-md-10 col-md-offset-2 col-xs-offset-2">
+                <br>
+                <br>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-4 col-xs-offset-2">
-                <h3><b>HDD Status</b></h3>
-                <p>Some text</p>
-                <div id="graph-hddstats"></div>
+            <div class="well col-xs-8 col-md-8 col-md-offset-2 col-xs-offset-2">
+                 <div id="graph-weatherstats"></div>              
             </div>
-            <div class="col-xs-4">
-                <h3><b>Network Status</b></h3>
-                <p><b>Avg. Data Transfer:</b> 200 kbps</p>
-                <p><b>Curr. Upload Rate:</b> 100 kbps</p>
-                <p><b>Curr. Download Rate:</b> 50 kbps</p>
-                <div id="graph-netstatus"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-4 col-xs-offset-2">
-                <h3><b>Temperature Status</b></h3>
-                <p><b>Avg. Temp:</b> 30.00 <b>*C</b></p>
-                <div id="graph-tempstats"></div>
-            </div>
-            <div class="col-xs-4">
-                <h3><b>Connection Status</b></h3>
-                <p><b>Avg. Ping:</b> 90 <b>ms</b></p>
-                <div id="graph-constats"></div>
+            <div class="col-xs-12 col-md-12 col-md-offset-2 col-xs-offset-2">
+                  <b><form class="form">Maximum visible values:</b> <input id="visible.values"type="number" min="5" max = "600" value="30" onchange="updateVisible()"></input></form>
             </div>
         </div>
     </div>
@@ -67,7 +53,7 @@
         <div class="container-fluid">
             <div class="navbar-header">
             <a class="navbar-brand" href="#">
-                <img alt="Gordo.Net" src="...">
+                <img alt="Weather.Gordo.Net" src="...">
             </a>
             </div>
         </div>
@@ -79,33 +65,26 @@
     <script src="./static/js/plotly-latest.min.js"></script>
     <script type="text/javascript">
 
-        function getData( scale=100)
+        function getData( scale=100, iterations = 20)
         {
             // testing graph
             var data = [
                 {
-                    x: [1,2,3,4,5,6],
-                    y: [Math.random()*scale,Math.random()*scale,Math.random()*scale,Math.random()*scale,Math.random()*scale],
-                    type: 'scatter'
+                    x: [],
+                    y: [],
+                    type: 'bar'
                 }
             ];
+
+            for( let x = 0; x < iterations; x++)
+            {
+                data[0].x.push(x);
+                data[0].y.push(Math.random() * scale);
+            }
 
             return data;
         }
 
-
-        var net_layout = {
-            autosize: true,
-            //title: 'Network Traffic',
-            xaxis: {
-                title: 'Time',
-                zeroline: false
-            },
-            yaxis: {
-                title: 'Net traffic',
-                showline: false
-            }
-        };
 
         var temp_layout = {
             autosize: true,
@@ -115,81 +94,67 @@
                 zeroline: false
             },
             yaxis: {
-                title: 'Temperature *C',
+                title: 'Temp °C',
                 showline: false
             }
         }
 
-        var cpu_layout = {
-            autosize: true,
-            //title:'Processor Status',
-            xaxis: {
-                title: 'Time',
-                zeroline: false
-            },
-            yaxis: {
-                title: 'Percentage %',
-                showline: false
-            }
-        }
+        var weatherinfo = getData(100,30);
+        var x = 30;
+        var maxvalue = 30;
 
-        var hdd_layout = {
-            autosize: true,
-            //title:'HDD usage',
-            xaxis: {
-                title: 'Time',
-                zeroline: false
-            },
-            yaxis: {
-                title: 'Disk used %',
-                showline: false
-            }
-        }
-
-        var mem_layout = {
-            autosize: true,
-            //title:'Memory usage',
-            xaxis: {
-                title: 'Time',
-                zeroline: false
-            },
-            yaxis: {
-                title: 'RAM Used %',
-                showline: false
-            }
-        }
-
-        var con_layout = {
-            autosize: true,
-            //title:'Connection Stats',
-            xaxis: {
-                title: 'Time',
-                zeroline: false
-            },
-            yaxis: {
-                title: 'Uplink Latency ms',
-                showline: false
-            }
-        }
-
-        var cpu_data = getData(100);
-
-        Plotly.newPlot('graph-cpustats', cpu_data, cpu_layout);
-        Plotly.newPlot('graph-memstats', getData(200), mem_layout);
-        Plotly.newPlot('graph-hddstats', getData(100), hdd_layout);
-        Plotly.newPlot('graph-netstatus', getData(1000), net_layout);
-        Plotly.newPlot('graph-tempstats', getData(40), temp_layout);
-        Plotly.newPlot('graph-constats', getData(), con_layout);
-
-        /*function updateGraphCPU()
+        function nextDate()
         {
-            let data = getData(100);
+            weatherinfo[0].x.push(x + 1);
+            weatherinfo[0].y.push(Math.random() * 100);
 
-            // update cpu graph randomly with data
-            Plotly.newPlot('graph-cpustats', data, cpu_layout);
-        }*/
+            Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
+            x=x+1;
+        }
 
-        //updateTimer = setInterval(updateGraphCPU,500);
+        function prevDate()
+        {
+            weatherinfo[0].x.pop();
+            weatherinfo[0].y.pop();
+            Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
+        }
+
+        function clamp(val, min, max)
+        {
+            return Math.max(min, Math.min(max, val))
+        }
+
+        function refresh()
+        {
+            // reset to default
+            weatherinfo = getData(100,maxvalue);
+            x = maxvalue;
+            Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
+        }
+
+        function updateVisible()
+        {
+            var element = document.getElementById("visible.values");
+            maxvalue = element.value;
+            maxvalue = clamp(maxvalue, 5,150);
+            element.value = maxvalue;
+            refresh();
+        }
+
+        setInterval( nextDate(),2000);
+
+        // plot temperature graph
+        Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
+
+        // disable form post.
+        $(document).ready(function() {
+            $(window).keydown(function(event){
+                if(event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+                }
+            });
+        });
     </script>
 </body>
 </html>
