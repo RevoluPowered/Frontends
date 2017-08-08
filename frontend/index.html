@@ -99,12 +99,17 @@
             }
         }
 
+        var localstore = localStorage['viewnumber'] || 30;
         var weatherinfo = getData(100,30);
-        var x = 30;
-        var maxvalue = 30;
+        var x = localstore;
+
+        var maxvalue = localstore;
+        var init = false;
+
 
         function nextDate()
         {
+            if(!init) {return};
             weatherinfo[0].x.push(x + 1);
             weatherinfo[0].y.push(Math.random() * 100);
 
@@ -114,6 +119,7 @@
 
         function prevDate()
         {
+            if(!init) {return};
             weatherinfo[0].x.pop();
             weatherinfo[0].y.pop();
             Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
@@ -126,6 +132,7 @@
 
         function refresh()
         {
+            if(!init) {return};
             // reset to default
             weatherinfo = getData(100,maxvalue);
             x = maxvalue;
@@ -134,18 +141,18 @@
 
         function updateVisible()
         {
-            var element = document.getElementById("visible.values");
+            if(!init) {return};
+            let element = document.getElementById("visible.values")
             maxvalue = element.value;
             maxvalue = clamp(maxvalue, 5,150);
+            localStorage['viewnumber'] = maxvalue;
             element.value = maxvalue;
             refresh();
         }
 
         setInterval( nextDate(),2000);
 
-        // plot temperature graph
-        Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
-
+       
         // disable form post.
         $(document).ready(function() {
             $(window).keydown(function(event){
@@ -155,6 +162,30 @@
                 }
             });
         });
+
+        if(localStorage['viewnumber'])
+        {
+            // init - retrieve elements and set up defaults
+            let element = document.getElementById("visible.values")
+            element.value = localStorage['viewnumber'];
+            maxvalue = localStorage['viewnumber'];
+
+            // reset to default
+            weatherinfo = getData(100,maxvalue);
+            x = maxvalue;
+
+            // plot the graph
+            Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
+        }
+        else
+        {
+             // plot temperature graph
+            Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
+
+        }
+
+        // done initialisation
+        init = true;
     </script>
 </body>
 </html>
