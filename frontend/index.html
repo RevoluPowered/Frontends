@@ -72,7 +72,7 @@
                 {
                     x: [],
                     y: [],
-                    type: 'bar'
+                    type: 'markers+lines'
                 }
             ];
 
@@ -88,7 +88,7 @@
 
         var temp_layout = {
             autosize: true,
-            //title: 'Temperature Stats',
+            title: 'High-Resolution Temperature',
             xaxis: {
                 title: 'Time',
                 zeroline: false
@@ -121,7 +121,7 @@
 
             Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
             x=x+1;
-
+            maxvalue=x;
             console.log("Val: " + x);
             console.log("Mval " + maxvalue);
         }
@@ -131,6 +131,8 @@
             if(!init) {return};
             weatherinfo[0].x.pop();
             weatherinfo[0].y.pop();
+            x=x-1;
+            maxvalue=x;
             Plotly.newPlot('graph-weatherstats', weatherinfo, temp_layout);
         }
 
@@ -159,7 +161,7 @@
             refresh();
         }
 
-        setInterval( nextDate(),2000);
+        setInterval(function(){ nextDate()},2000);
 
        
         // disable form post.
