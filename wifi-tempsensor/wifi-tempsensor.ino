@@ -118,7 +118,7 @@ void handleRoot() {
 */
 
   message += "</body></html>";
-  server.send(200, "text/html", message);
+  server.send(200, "text/plain", message);
 }
 
 class sensor_reading 
@@ -142,7 +142,7 @@ std::vector<sensor_reading*>* collectHighSpeed( int reading_count = 10)
     reading->humidity = dht.readHumidity();
     reading->temperature = dht.readTemperature();
     readings->push_back(reading);
-    delay(200);
+    delay(250);
   }
 
   return readings;
@@ -197,20 +197,21 @@ void setup(void){
   server.on("/", handleRoot);
 
   server.on("/inline", [](){
+    String reading = "";
     std::vector<sensor_reading*> * readings = collectHighSpeed();
     {
       std::vector<sensor_reading*>::iterator it;
       for(it = readings->begin(); it != readings->end(); ++it)
       {
         float temp = (*it)->temperature;
-        Serial.print(temp);
-        Serial.print(",");
+        reading += temp;
+        reading += ", ";
       }
       
     }    
     readings->clear(); // call delete on individual objects;
     delete readings; // done with memory.
-    server.send(200, "text/html", "completed: check serial output");
+    server.send(200, "text/html", reading);
   });
   
   server.onNotFound(handleNotFound);

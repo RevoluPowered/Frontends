@@ -12,5 +12,6 @@ async def log_cpu():
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(log_cpu())
+
 loop.close()
 print("Finished logging cpu usage to CSV.")
